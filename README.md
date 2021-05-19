@@ -25,7 +25,8 @@ Developed for use with an ATmega32U4 based Arduino (eg Micro, Leonardo, Pro Micr
 To use an 18 pin original ST connector, just connect pins 1-8, using the blocked/missing pin as pin 2.
 The other pins are unused for keyboard purposes. (They contain the 9pin mouse/keyboard inputs from the main PCB)
 
-To use an RJ11 based keyboard (Mega ST, Mega STE, TT)
+### To use an RJ11 based keyboard (Mega ST, Mega STE, TT)
+
 | Atari RJ11 Keyboard Connector  | Arduino |
 | ------------------------------ |:-------:|
 | Pin 1: 5V | 5V |
