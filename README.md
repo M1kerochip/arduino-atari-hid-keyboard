@@ -4,7 +4,7 @@ Interface Atari ST Keyboard to USB HID Keyboard
 This code runs on an ATmega32U4 based Arduino to provide an interface between an Atari ST keyboard (8 Pin, 18 Pin and RJ11) and a USB HID keyboard device.
 Atari 520 STFM (UK), Atari 1040 STE (UK) and Atari TT keyboards tested.
 
-The purpose of this is to allow an ST keyboard to be used with any machine that accecpts USB HID Keyboards.
+The purpose of this is to allow an ST keyboard to be used with any machine that accepts USB HID Keyboards.
 
 Developed for use with an ATmega32U4 based Arduino (eg Micro, Leonardo, Pro Micro etc) as it is able to act directly as a USB keyboard controller.
 
@@ -36,9 +36,13 @@ The other pins are unused for keyboard purposes. (They contain the 9pin mouse/ke
 | Pin 5: 0V | GND |
 | Pin 6: 0V | GND |
 
+<br>
+Initial idea and some original code provided by user 'joska' of http://www.atari-forum.com - license unknown <br><br>
+Copyright Kevin Peat 2017 kevin 'at' kevinpeat.com <br>
+My changes and additions are licensed public domain <br><br>
+See http://www.kevinpeat.com/atari_pi_reworked.html for my hybrid Atari ST Raspberry Pi project.<br><br>
 
-Copyright Kevin Peat 2017 kevin 'at' kevinpeat.com
-See http://www.kevinpeat.com/atari_pi_reworked.html for my hybrid Atari ST Raspberry Pi project.
+Additional code by Michael Farrell 2021
 
 ### 2021-05-18 (MF)
 
