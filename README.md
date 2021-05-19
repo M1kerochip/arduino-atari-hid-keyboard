@@ -17,15 +17,15 @@ The Atari keyboard connector is wired to the Arduino as follows:
 
 > Atari 8-pin Keyboard Connector     Arduino
 > ------------------------------     -------
-> 1 0V                               GND
-> 2 (Blanked off)
-> 3 Not used
-> 4 5V                               5V
-> 5 RX                               RX1 (0)
-> 6 TX                               TX1 (1)
-> 7 Reset                            4 (can be changed in code)
-> 8 Not used
-
+> 1 0V                               GND <br>
+> 2 (Blanked off) <br>
+> 3 Not used <br>
+> 4 5V                               5V <br>
+> 5 RX                               RX1 (0) <br>
+> 6 TX                               TX1 (1) <br>
+> 7 Reset                            4 (can be changed in code) <br>
+> 8 Not used <br>
+>
 
 See http://www.kevinpeat.com/atari_pi_reworked.html for my hybrid Atari
 ST Raspberry Pi project.
