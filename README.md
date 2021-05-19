@@ -15,16 +15,16 @@ be modified as some of the other Arduinos (eg. Uno) would do.
 
 The Atari keyboard connector is wired to the Arduino as follows:
 
-> Atari 8-pin Keyboard Connector     Arduino
-> ------------------------------     -------
-> 1 0V                               GND <br>
+> Atari 8-pin Keyboard Connector      Arduino
+> ------------------------------      -------
+> 1 0V                                GND <br>
 > 2 (Blanked off) <br>
-> 3 Not used <br>
-> 4 5V                               5V <br>
-> 5 RX                               RX1 (0) <br>
-> 6 TX                               TX1 (1) <br>
-> 7 Reset                            4 (can be changed in code) <br>
-> 8 Not used <br>
+> 3 (Not used) <br>
+> 4 5V                                5V <br>
+> 5 RX                                RX1 (0) <br>
+> 6 TX                                TX1 (1) <br>
+> 7 Reset                             Digital Pin 10 <br>
+> 8 Floppy drive led                  Digital Pin 14 <br>
 >
 
 See http://www.kevinpeat.com/atari_pi_reworked.html for my hybrid Atari
