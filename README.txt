@@ -33,3 +33,16 @@ ST Raspberry Pi project.
 
 Copyright Kevin Peat 2017
 kevin 'at' kevinpeat.com
+
+### 2021-05-18 ### (MF)
+
+* Switched over development from the Arduino IDE to PlatformIO using Visual Studio Code.
+* Program/sketch is now main.cpp instead of USB_HID_Keyboard.ino
+* The Arduino keyboard.h treats values below 128 as printable and uses an ascii lookup table. It add 136 to the value to overcome this. Therefore keycodes above 120 cannot be used.
+* The ( and ) numperpad keys are keycodes 182 and 183.
+* Fixed the incorrect keycodes for all the numberpad keys except the two above.
+* Changed Numberpad Enter key to scancode 88: Keypad Enter
+* Changed the \ | key to scancode 49: Keyboard \ and |
+* Changed the #~ key to scancode 50: Keyboard Non-US # and ~
+* Changed Help to F11 and Undo to F12.
+* Keycode list: from https://www.usb.org/sites/default/files/documents/hut1_12v2.pdf
