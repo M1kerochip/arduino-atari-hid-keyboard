@@ -12,12 +12,6 @@ The Atari keyboard connector is wired to the Arduino as follows:
 
 | Atari 8-pin Keyboard Connector  | Arduino |
 | ------------------------------- |:-------:|
-| left foo                        | right foo     |
-| 1 0V                            | GND |
-| Pin 2: (Unused) | |
-
-| Atari 8-pin Keyboard Connector  | Arduino |
-| ------------------------------- |:-------:|
 | Pin 1: 0V | GND |
 | Pin 2: Blocked (Unused) | - |
 | Pin 3: (Unused) | - |
