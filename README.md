@@ -15,16 +15,16 @@ be modified as some of the other Arduinos (eg. Uno) would do.
 
 The Atari keyboard connector is wired to the Arduino as follows:
 
-Atari 8-pin Keyboard Connector     Arduino
-------------------------------     -------
-1 0V                               GND
-2 (Blanked off)
-3 Not used
-4 5V                               5V
-5 RX                               RX1 (0)
-6 TX                               TX1 (1)
-7 Reset                            4 (can be changed in code)
-8 Not used
+> Atari 8-pin Keyboard Connector     Arduino
+> ------------------------------     -------
+> 1 0V                               GND
+> 2 (Blanked off)
+> 3 Not used
+> 4 5V                               5V
+> 5 RX                               RX1 (0)
+> 6 TX                               TX1 (1)
+> 7 Reset                            4 (can be changed in code)
+> 8 Not used
 
 
 See http://www.kevinpeat.com/atari_pi_reworked.html for my hybrid Atari
@@ -34,7 +34,7 @@ ST Raspberry Pi project.
 Copyright Kevin Peat 2017
 kevin 'at' kevinpeat.com
 
-### 2021-05-18 ### (MF)
+### 2021-05-18 (MF)
 
 * Switched over development from the Arduino IDE to PlatformIO using Visual Studio Code.
 * Program/sketch is now main.cpp instead of USB_HID_Keyboard.ino
