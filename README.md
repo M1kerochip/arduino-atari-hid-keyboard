@@ -37,12 +37,8 @@ The other pins are unused for keyboard purposes. (They contain the 9pin mouse/ke
 | Pin 6: 0V | GND |
 
 
-
-
+Copyright Kevin Peat 2017 kevin 'at' kevinpeat.com
 See http://www.kevinpeat.com/atari_pi_reworked.html for my hybrid Atari ST Raspberry Pi project.
-
-Copyright Kevin Peat 2017
-kevin 'at' kevinpeat.com
 
 ### 2021-05-18 (MF)
 
@@ -56,3 +52,5 @@ kevin 'at' kevinpeat.com
 * Changed the #~ key to scancode 50: Keyboard Non-US # and ~
 * Changed Help to F11 and Undo to F12.
 * Keycode list: from https://www.usb.org/sites/default/files/documents/hut1_12v2.pdf
+* Tidied up README.md.
+* Added information on how to connect external keyboards.
