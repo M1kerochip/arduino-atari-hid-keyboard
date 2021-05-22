@@ -1,38 +1,48 @@
 Interface Atari ST Keyboard to USB HID Keyboard
 ===============================================
 
-This code runs on an Arduino Leonardo to provide an interface between 
-an Atari ST keyboard (520 STFM keyboard tested, others *may* work) and 
-a USB HID keyboard device.
+This code runs on an ATmega32U4 based Arduino to provide an interface between an Atari ST keyboard (8 Pin, 18 Pin and RJ11) and a USB HID keyboard device.
+Atari 520 STFM (UK), Atari 1040 STE (UK) and Atari TT keyboards tested.
 
-The purpose of this is to allow a small form factor PC (Raspberry Pi in
-my case) to be installed in an Atari ST case and to use the original 
-ST keyboard.
+The purpose of this is to allow an ST keyboard to be used with any machine that accepts USB HID Keyboards.
 
-Developed for use with an Arduino Leonardo as it is able to act directly 
-as a USB keyboard controller so doesn't require the Arduino firmware to 
-be modified as some of the other Arduinos (eg. Uno) would do.
+Developed for use with an ATmega32U4 based Arduino (eg Micro, Leonardo, Pro Micro etc) as it is able to act directly as a USB keyboard controller.
 
-The Atari keyboard connector is wired to the Arduino as follows:
+### The Atari keyboard connector is wired to the Arduino as follows:
 
-> Atari 8-pin Keyboard Connector     Arduino
-> ------------------------------     -------
-> 1 0V                               GND
-> 2 (Blanked off)
-> 3 Not used
-> 4 5V                               5V
-> 5 RX                               RX1 (0)
-> 6 TX                               TX1 (1)
-> 7 Reset                            4 (can be changed in code)
-> 8 Not used
+| Atari 8-pin Keyboard Connector  | Arduino |
+| ------------------------------- |:-------:|
+| Pin 1: 0V | GND |
+| Pin 2: Blocked (Unused) | - |
+| Pin 3: (Unused) | - |
+| Pin 4: 5V | 5V |
+| Pin 5: TX | RX (PD2) |
+| Pin 6: RX | TX (PD3) |
+| Pin 7: Reset | Digital Pin 10 (PB6) |
+| Pin 8: Floppy Drive Light |  Digital Pin 14 (PF7) |
 
 
-See http://www.kevinpeat.com/atari_pi_reworked.html for my hybrid Atari
-ST Raspberry Pi project.
+To use an 18 pin original ST connector, just connect pins 1-8, using the blocked/missing pin as pin 2.
+The other pins are unused for keyboard purposes. (They contain the 9pin mouse/keyboard inputs from the main PCB)
 
+### To use an RJ11 based keyboard (Mega ST, Mega STE, TT)
 
-Copyright Kevin Peat 2017
-kevin 'at' kevinpeat.com
+| Atari RJ11 Keyboard Connector  | Arduino |
+| ------------------------------ |:-------:|
+| Pin 1: 5V | 5V |
+| Pin 2: 5V | 5V |
+| Pin 3: RX | TX (PD3) |
+| Pin 4: TX | RX (PD2) |
+| Pin 5: 0V | GND |
+| Pin 6: 0V | GND |
+
+<br>
+Initial idea and some original code provided by user 'joska' of http://www.atari-forum.com - license unknown <br><br>
+Copyright Kevin Peat 2017 kevin 'at' kevinpeat.com <br>
+My changes and additions are licensed public domain <br><br>
+See http://www.kevinpeat.com/atari_pi_reworked.html for my hybrid Atari ST Raspberry Pi project.<br><br>
+
+Additional code by Michael Farrell 2021
 
 ### 2021-05-18 (MF)
 
@@ -46,3 +56,5 @@ kevin 'at' kevinpeat.com
 * Changed the #~ key to scancode 50: Keyboard Non-US # and ~
 * Changed Help to F11 and Undo to F12.
 * Keycode list: from https://www.usb.org/sites/default/files/documents/hut1_12v2.pdf
+* Tidied up README.md.
+* Added information on how to connect external keyboards.
