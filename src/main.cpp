@@ -338,7 +338,7 @@ void convert_scancode(uint8_t key)
         send_escaped_key(ARD_HOME);
         break;
       case 0x65: // Num /
-        send_escaped_key(0x2F);
+        send_escaped_key(NUM_Slash);
         break;
       case 0x72: // Num Enter
         send_escaped_key(NUM_Enter);
