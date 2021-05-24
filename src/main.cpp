@@ -1,5 +1,6 @@
-#include <Arduino.h>
-#include <Keyboard.h>
+# include <Arduino.h>
+# include "Mouse.h"	  		// For Arduino Mouse
+# include "Joystick.h"		// For Joystick control (mheironimus/Joystick)
 /* 
 * -------------------------------------------------------------------------
 * Interface Atari ST Keyboard to USB HID Keyboard
@@ -17,11 +18,27 @@
 * -------------------------------------------------------------------------
 */
 
-// #define DEBUG
+#define DEBUG
+
+#define ArduinoKeyboard_Source 
+
+#ifdef ArduinoKeyboard_Source
+# include <Keyboard.h>
+#else
+# include <Keyboard_Real.h>
+#endif
+
+/*
+For 7 pin Atari keyboards, you can use the floppy LED as a caps lock LED
+Unsupported on RJ11 external Keyboards: Mega ST, Mega STE, TT
+*/
+#define UseFloppyCapsLock  // Define, to use the floppy LED as capslock LED
+
+// ST keyboard Floppy LED pin
+const int ST_FLOPPY_LED = 9; // D9 for Arduino (Pro) Micro
 
 // ST keyboard reset pin
-const int ST_KB_RESET = 10;
-const int ST_FLOPPY_LED = 14;
+const int ST_KB_RESET = 8; // D8 for Arduino (Pro) Micro
 
 // Atari modifier key codes
 const uint8_t ST_LEFT_CTRL = 0x1D;
@@ -30,55 +47,39 @@ const uint8_t ST_LEFT_ALT = 0x38;
 const uint8_t ST_RIGHT_SHIFT = 0x36;
 const uint8_t ST_CAPS_LOCK = 0x3A;
 
-// Arduino Leonardo modifier key codes
-const uint8_t ARD_LEFT_CTRL = 0x80;
-const uint8_t ARD_LEFT_SHIFT = 0x81;
-const uint8_t ARD_LEFT_ALT = 0x82;
-const uint8_t ARD_RIGHT_SHIFT = 0x85;
-const uint8_t ARD_CAPS_LOCK = 0xC1;
+/*
+The Arduino Keyboard.h subtracts 136 from all keyboard codes above 136.
+To get the real code, add 136 to it.
+It also subtracts 128 from all keycodes from 128-135.
+If using a proper keyboard library, set to 0
+*/
+#ifdef ArduinoKeyboard_Source 
+const int KeyboardStupid = 0x88;
+#else
+const int KeyboardStupid = 0x00;
+#endif
 
-// Arduino Leonardo special key codes
-const uint8_t ARD_UP_ARROW = 0xDA;
-const uint8_t ARD_DOWN_ARROW = 0xD9;
-const uint8_t ARD_LEFT_ARROW = 0xD8;
-const uint8_t ARD_RIGHT_ARROW = 0xD7;
-const uint8_t ARD_BACKSPACE = 0xB2;
-const uint8_t ARD_TAB = 0xB3;
-const uint8_t ARD_RETURN = 0xB0;
-const uint8_t ARD_ESC = 0xB1;
-const uint8_t ARD_INSERT = 0xD1;
-const uint8_t ARD_DELETE = 0xD4;
-const uint8_t ARD_HOME = 0xD2;
-const uint8_t ARD_F1 = 0xC2;
-const uint8_t ARD_F2 = 0xC3;
-const uint8_t ARD_F3 = 0xC4;
-const uint8_t ARD_F4 = 0xC5;
-const uint8_t ARD_F5 = 0xC6;
-const uint8_t ARD_F6 = 0xC7;
-const uint8_t ARD_F7 = 0xC8;
-const uint8_t ARD_F8 = 0xC9;
-const uint8_t ARD_F9 = 0xCA;
-const uint8_t ARD_F10 = 0xCB;
-const uint8_t ARD_F11 = 0xCC;
-const uint8_t ARD_F12 = 0xCD;
-const uint8_t NUM_Enter = 0xE0;
-const uint8_t NUM_0 = 0xEA;
-const uint8_t NUM_Period = 0xEB;
-const uint8_t NUM_1 = 0xE1;
-const uint8_t NUM_2 = 0xE2;
-const uint8_t NUM_3 = 0xE3;
-const uint8_t NUM_4 = 0xE4;
-const uint8_t NUM_5 = 0xE5;
-const uint8_t NUM_6 = 0xE6;
-const uint8_t NUM_7 = 0xE7;
-const uint8_t NUM_8 = 0xE8;
-const uint8_t NUM_9 = 0xE9;
-const uint8_t NUM_Plus = 0xDF;
-const uint8_t NUM_Minus = 0xDE;
-const uint8_t NUM_Star = 0xDD;
-const uint8_t NUM_Slash = 0xDC;
-const uint8_t BackSlash_NonUS = 0xEC;
-const uint8_t TildeHash_NonUS = 0x5C;
+const uint8_t Key_BackSlashPipe = 0x31 + KeyboardStupid;
+const uint8_t Key_TildeHash_NonUS = 0x32 + KeyboardStupid;
+const uint8_t Key_GraveAccentTilde = 0x35 + KeyboardStupid;
+const uint8_t NUM_Slash = 0x54 + KeyboardStupid;
+const uint8_t NUM_Star = 0x55 + KeyboardStupid;
+const uint8_t NUM_Minus = 0x56 + KeyboardStupid;
+const uint8_t NUM_Plus = 0x57 + KeyboardStupid;
+const uint8_t NUM_Enter = 0x58 + KeyboardStupid;
+const uint8_t NUM_1 = 0x59 + KeyboardStupid;
+const uint8_t NUM_2 = 0x5A + KeyboardStupid;
+const uint8_t NUM_3 = 0x5B + KeyboardStupid;
+const uint8_t NUM_4 = 0x5C + KeyboardStupid;
+const uint8_t NUM_5 = 0x5D + KeyboardStupid;
+const uint8_t NUM_6 = 0x5E + KeyboardStupid;
+const uint8_t NUM_7 = 0x5F + KeyboardStupid;
+const uint8_t NUM_8 = 0x60 + KeyboardStupid;
+const uint8_t NUM_9 = 0x61 + KeyboardStupid;
+const uint8_t NUM_0 = 0x62 + KeyboardStupid;
+const uint8_t NUM_Period = 0x63 + KeyboardStupid;
+const uint8_t Key_BackSlashPipe_NonUS = 0x64 + KeyboardStupid;
+
 
 // Keyboard auto-repeat
 static uint8_t last_make;    // Last make char
@@ -105,7 +106,7 @@ https://www.usb.org/sites/default/files/documents/hut1_12v2.pdf
 uint8_t scanCodes[] =
 {
   0x00, // (Nothing)
-  ARD_ESC, // Esc
+  KEY_ESC, // Esc
   0x31, // 1
   0x32, // 2
   0x33, // 3
@@ -118,8 +119,8 @@ uint8_t scanCodes[] =
   0x30, // 0
   0x2D, // -
   0x3D, // == (Mapped to =)
-  ARD_BACKSPACE, // Backspace
-  ARD_TAB, // Tab
+  KEY_BACKSPACE, // Backspace
+  KEY_TAB, // Tab
   0x71, // q
   0x77, // w
   0x65, // e
@@ -132,8 +133,8 @@ uint8_t scanCodes[] =
   0x70, // p
   0x5B, // [
   0x5D, // ]
-  ARD_RETURN, // Enter
-  ARD_LEFT_CTRL, // Control
+  KEY_RETURN, // Enter
+  KEY_LEFT_CTRL, // Control
   0x61, // a
   0x73, // s
   0x64, // d
@@ -145,9 +146,9 @@ uint8_t scanCodes[] =
   0x6C, // l
   0x3B, // ;
   0x27, // ' (Mapped to '")
-  0x7E, // # 
-  ARD_LEFT_SHIFT, // Lshift
-  TildeHash_NonUS, // #~ (Mapped to ~)
+  Key_GraveAccentTilde, // # 
+  KEY_LEFT_SHIFT, // Lshift
+  Key_TildeHash_NonUS, // #~
   0x7A, // z
   0x78, // x
   0x63, // c
@@ -158,36 +159,36 @@ uint8_t scanCodes[] =
   0x2C, // ,
   0x2E, // .
   0x2F, // /
-  ARD_RIGHT_SHIFT, // Rshift
+  KEY_RIGHT_SHIFT, // Rshift
   0x37, // (Not used)
-  ARD_LEFT_ALT, // Alternate
+  KEY_LEFT_ALT, // Alternate
   0x20, // Space
-  ARD_CAPS_LOCK, // CapsLock
-  ARD_F1, // F1
-  ARD_F2, // F2
-  ARD_F3, // F3
-  ARD_F4, // F4
-  ARD_F5, // F5
-  ARD_F6, // F6
-  ARD_F7, // F7
-  ARD_F8, // F8
-  ARD_F9, // F9
-  ARD_F10, // F10
+  KEY_CAPS_LOCK, // CapsLock
+  KEY_F1, // F1
+  KEY_F2, // F2
+  KEY_F3, // F3
+  KEY_F4, // F4
+  KEY_F5, // F5
+  KEY_F6, // F6
+  KEY_F7, // F7
+  KEY_F8, // F8
+  KEY_F9, // F9
+  KEY_F10, // F10
   0x45, // (Not used)
   0x46, // (Not used)
-  0xE0, // Clr/Home
-  0xE0, // Up Arrow
+  KEY_HOME, // Clr/Home
+  KEY_UP_ARROW, // Up Arrow
   0x49, // (Not used)
   NUM_Minus, // Numeric Pad -
-  0xE0, // Left Arrow
+  KEY_LEFT_ARROW, // Left Arrow
   0x4c, // (Not used)
-  0xE0, // Right Arrow
+  KEY_RIGHT_ARROW, // Right Arrow
   NUM_Plus, // Numeric Pad +
   0x4f, // (Not used)
-  0xE0, // Down Arrow
+  KEY_DOWN_ARROW, // Down Arrow
   0x51, // (Not used)
-  0xE0, // Insert
-  0xE0, // Delete
+  KEY_INSERT, // Insert
+  KEY_DELETE, // Delete
   0x54, // (Not used)
   0x55, // (Not used)
   0x56, // (Not used)
@@ -200,9 +201,9 @@ uint8_t scanCodes[] =
   0x5d, // (Not used)
   0x5e, // (Not used)
   0x5f, // (Not used)
-  BackSlash_NonUS, // Keyboard Non-US \ and |
-  ARD_F12, // Undo (Mapped to F12)
-  ARD_F11, // Help (Mapped to F11)
+  Key_BackSlashPipe_NonUS, // Keyboard Non-US \ and |
+  KEY_F12, // Undo (Mapped to F12)
+  KEY_F11, // Help (Mapped to F11)
   0x28, // Numeric Pad ( [Mapped to ( since the Arduino keyboard can't map keycode 182]
   0x29, // Numeric Pad ) [Mapped to ) since the Arduino keyboard can't map keycode 183]
   NUM_Slash,  // Numeric Pad /
@@ -220,6 +221,15 @@ uint8_t scanCodes[] =
   NUM_Period, // Numeric Pad .
   NUM_Enter   // Numeric Pad Enter
 };
+
+/*
+Switch on/off the floppy drive led via the ST_FLOPPY_LED Pin.
+*/
+void TurnOnOfFloppyLED(int HighLow)
+{
+  pinMode(ST_FLOPPY_LED, OUTPUT);
+  digitalWrite(ST_FLOPPY_LED,HighLow); // For output, HIGH is 5v, LOW is 0v
+}
 
 // Reset ST Keyboard
 void reset_st_keyboard(void)
@@ -241,19 +251,23 @@ boolean process_modifier(uint8_t key)
   switch (key)
     {
       case ST_LEFT_CTRL:
-        Keyboard.press(ARD_LEFT_CTRL);
+        Keyboard.press(KEY_LEFT_CTRL);
         return true;
       case ST_LEFT_SHIFT:
-        Keyboard.press(ARD_LEFT_SHIFT);
+        Keyboard.press(KEY_LEFT_SHIFT);
         return true;
       case ST_LEFT_ALT:
-        Keyboard.press(ARD_LEFT_ALT);
+        Keyboard.press(KEY_LEFT_ALT);
         return true;
       case ST_RIGHT_SHIFT:
-        Keyboard.press(ARD_RIGHT_SHIFT);
+        Keyboard.press(KEY_RIGHT_SHIFT);
         return true;        
       case ST_CAPS_LOCK:
-        Keyboard.press(ARD_CAPS_LOCK);
+        Keyboard.press(KEY_CAPS_LOCK);
+        #ifdef UseFloppyCapsLock
+          // Switch off Floppy LED
+          TurnOnOfFloppyLED(HIGH); // For output, HIGH is 5v, LOW is 0v
+        #endif
         return true;
     }
 
@@ -261,19 +275,23 @@ boolean process_modifier(uint8_t key)
   switch (key & 0x7f)
     {
       case ST_LEFT_CTRL:
-        Keyboard.release(ARD_LEFT_CTRL);
+        Keyboard.release(KEY_LEFT_CTRL);
         return true;
       case ST_LEFT_SHIFT:
-        Keyboard.release(ARD_LEFT_SHIFT);
+        Keyboard.release(KEY_LEFT_SHIFT);
         return true;
       case ST_LEFT_ALT:
-        Keyboard.release(ARD_LEFT_ALT);
+        Keyboard.release(KEY_LEFT_ALT);
         return true;
       case ST_RIGHT_SHIFT:
-        Keyboard.release(ARD_RIGHT_SHIFT);
+        Keyboard.release(KEY_RIGHT_SHIFT);
         return true;        
       case ST_CAPS_LOCK:
-        Keyboard.release(ARD_CAPS_LOCK);
+        Keyboard.release(KEY_CAPS_LOCK);
+        #ifdef UseFloppyCapsLock
+          // Switch off Floppy LED
+          TurnOnOfFloppyLED(LOW); // For output, HIGH is 5v, LOW is 0v
+        #endif
         return true;
     }
   
@@ -317,25 +335,25 @@ void convert_scancode(uint8_t key)
     switch (key & 0x7f)
     {
       case 0x48: // Up arrow
-        send_escaped_key(ARD_UP_ARROW);
+        send_escaped_key(KEY_UP_ARROW);
         break;
       case 0x4b: // Left arrow
-        send_escaped_key(ARD_LEFT_ARROW);
+        send_escaped_key(KEY_LEFT_ARROW);
         break;
       case 0x4d: // Right arrow
-        send_escaped_key(ARD_RIGHT_ARROW);
+        send_escaped_key(KEY_RIGHT_ARROW);
         break;
       case 0x50: // Down arrow
-        send_escaped_key(ARD_DOWN_ARROW);
+        send_escaped_key(KEY_DOWN_ARROW);
         break;
       case 0x52: // Insert
-        send_escaped_key(ARD_INSERT);
+        send_escaped_key(KEY_INSERT);
         break;
       case 0x53: // Delete
-        send_escaped_key(ARD_DELETE);
+        send_escaped_key(KEY_DELETE);
         break;
       case 0x47: // Clr/Home
-        send_escaped_key(ARD_HOME);
+        send_escaped_key(KEY_HOME);
         break;
       case 0x65: // Num /
         send_escaped_key(NUM_Slash);
@@ -347,7 +365,7 @@ void convert_scancode(uint8_t key)
         send_escaped_key(0x23);
         break;
       case 0x62: // Help
-        send_escaped_key(ARD_F1);
+        send_escaped_key(KEY_F1);
         break;
     }
   }
@@ -365,7 +383,7 @@ void process_keypress(uint8_t key)
   if (((key & 0x7f) > 0) && ((key & 0x7f) < 0x73))
   {
     // Break codes (other than modifiers) do not need to be sent 
-    // to the PC as the Leonardo keyboard interface handles that
+    // to the PC as the Arduino keyboard interface handles that
     if (key & 0x80) // Break
     {
       last_make = 0;
@@ -430,22 +448,26 @@ void setup(void)
   // Open serial port to PC
   Serial.begin(9600);
 #endif
-  
+
   // Reset ST keyboard
   delay(200);
   reset_st_keyboard();
   delay(200);
 
   // Empty serial buffer before starting
-  while(Serial1.available() > 0) Serial1.read();
+  while(Serial1.available() > 0) {
+    Serial1.read();
+  }
 }
 
 
 void loop()
 {
   // Process incoming Atari keypresses
-  if (Serial1.available() > 0) process_keypress(Serial1.read());
+  if (Serial1.available() > 0) {
+  process_keypress(Serial1.read());
+  }
 
-  // Handle keyboard auto-repeat
-  auto_repeat();
+   // Handle keyboard auto-repeat
+   auto_repeat();
 }
