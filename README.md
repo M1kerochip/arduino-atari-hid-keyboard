@@ -18,8 +18,8 @@ Developed for use with an ATmega32U4 based Arduino (eg Micro, Leonardo, Pro Micr
 | Pin 4: 5V | 5V |
 | Pin 5: TX | RX (PD2) |
 | Pin 6: RX | TX (PD3) |
-| Pin 7: Reset | Digital Pin 10 (PB6) |
-| Pin 8: Floppy Drive Light |  Digital Pin 14 (PF7) |
+| Pin 7: Reset | Digital Pin 8 (PB6) |
+| Pin 8: Floppy Drive Light |  Digital Pin 9 (PF7) |
 
 
 To use an 18 pin original ST connector, just connect pins 1-8, using the blocked/missing pin as pin 2.
@@ -58,3 +58,8 @@ Additional code by Michael Farrell 2021
 * Keycode list: from https://www.usb.org/sites/default/files/documents/hut1_12v2.pdf
 * Tidied up README.md.
 * Added information on how to connect external keyboards.
+
+### 2021-05-27 (MF)
+
+* Removed and rewrote the previous code, to better understand it.
+* Added initial Joystick 0 code.
