@@ -63,3 +63,8 @@ Additional code by Michael Farrell 2021
 
 * Removed and rewrote the previous code, to better understand it.
 * Added initial Joystick 0 code.
+
+### 2021-06-06 (MF)
+
+* Fixed Joystick 0 code.
+* Added German Atari ST keyboard layout.
