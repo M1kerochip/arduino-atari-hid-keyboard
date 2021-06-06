@@ -17,16 +17,15 @@
 * Atari ST, STF, STM, STFM, STE, Mega ST, Mega STE, TT, Falcon
 * Includes UK and US keyboard layout.
 * Optionally supports:
-* Joystick Player 1. (Must be plugged in before connecting keyboard)
+* Joystick Player 1. (Should be plugged in before connecting keyboard)
 * Digital Pin 8 can be used to reset the 7 / 18 pin keyboards.
 * Digital Pin 9 can be connected to use the floppy drive led as a capslock led.
 * TODO: Figure out mouse / Joystick Player 2
-* TODO: Add German keyboard layout.
 * -------------------------------------------------------------------------
 */
 
 // Define to include console output.
-#define DEBUG
+// #define DEBUG
 
 // Define this, to use the normal Arduino Keyboard library.
 #define ArduinoKeyboard_Source
@@ -66,8 +65,8 @@ const int ST_FLOPPY_LED = 9; // D9 for Arduino (Pro) Micro
 #endif
 
 #ifdef JoystickMouse_Support
-#define MAXBUTTONS 1      // The number of buttons you are using up to 9, for 2 player mode.
-#define JOYSTICK_COUNT 2  // The number of joysticks connected to the Arduino
+#define MAXBUTTONS 1     // The number of buttons you are using up to 9, for 2 player mode.
+#define JOYSTICK_COUNT 2 // The number of joysticks connected to the Arduino
 
 //Create Joystick objects
 #if JOYSTICK_COUNT == 1
@@ -510,8 +509,8 @@ uint8_t scanCodes[] =
         0x5d,                    // (Not used)
         0x5e,                    // (Not used)
         0x5f,                    // (Not used)
-//        Key_BackSlashPipe_NonUS, // Keyboard Non-US \ and |
-        0x5D,                    // 
+                                 //        Key_BackSlashPipe_NonUS, // Keyboard Non-US \ and |
+        0x5D,                    //
         KEY_F12,                 // Undo (Mapped to F12)
         KEY_F11,                 // Help (Mapped to F11)
         0x28,                    // Numeric Pad ( [Mapped to ( since the Arduino keyboard can't map keycode 182]
@@ -532,7 +531,6 @@ uint8_t scanCodes[] =
         NUM_Enter                // Numeric Pad Enter
 };
 #endif
-
 
 #ifdef UseFloppyCapsLock
 boolean CapsState = true;
@@ -603,7 +601,7 @@ void setup(void)
 }
 
 #ifdef JoystickMouse_Support
-// Hndles 
+// Hndles
 void HandleJoy(uint8_t joy, uint8_t char01)
 {
   switch (char01)
@@ -613,14 +611,14 @@ void HandleJoy(uint8_t joy, uint8_t char01)
     Joystick[joy].setYAxis(0); // Cancel direction up/down
     break;
 
-  case 0x01:                   // Joy0 Up
-    Joystick[joy].setXAxis(0); // Cancel left/right
-    Joystick[joy].setYAxis(-1);// Set direction up
+  case 0x01:                    // Joy0 Up
+    Joystick[joy].setXAxis(0);  // Cancel left/right
+    Joystick[joy].setYAxis(-1); // Set direction up
     break;
 
-  case 0x02:                    // Joy0 Down
-    Joystick[joy].setXAxis(0);  // Cancel left/right
-    Joystick[joy].setYAxis(1);  // Set direction Down
+  case 0x02:                   // Joy0 Down
+    Joystick[joy].setXAxis(0); // Cancel left/right
+    Joystick[joy].setYAxis(1); // Set direction Down
     break;
 
   case 0x04:                    // Joy0 Left
@@ -643,14 +641,14 @@ void HandleJoy(uint8_t joy, uint8_t char01)
     Joystick[joy].setYAxis(0); // Cancel up/down
     break;
 
-  case 0x09:                   // Joy0 Up,Right
-    Joystick[joy].setXAxis(1); // Set direction Right
-    Joystick[joy].setYAxis(-1);// Set direction up
+  case 0x09:                    // Joy0 Up,Right
+    Joystick[joy].setXAxis(1);  // Set direction Right
+    Joystick[joy].setYAxis(-1); // Set direction up
     break;
 
-  case 0x0A:                    // Joy0 Down,Right
-    Joystick[joy].setXAxis(1);  // Set direction Right
-    Joystick[joy].setYAxis(1);  // Set direction Down
+  case 0x0A:                   // Joy0 Down,Right
+    Joystick[joy].setXAxis(1); // Set direction Right
+    Joystick[joy].setYAxis(1); // Set direction Down
     break;
 
   default: // If something unexpected happens:
@@ -687,37 +685,39 @@ void Handle_Serial(int16_t SerialChar)
 {
 
 #ifdef DEBUG
-if (No_Op_Count > 0){
-  Serial.print("No_Op_Loop Count: ");
-  Serial.println(No_Op_Count,DEC);
-  Serial.print("Stored char: ");
-  Serial.println(Prev_Serial_Byte);
-  Serial.print("Serial char: ");
-  Serial.println(SerialChar);
-}
-else{
-  Serial.print("Atari serial char: ");
-  Serial.println(SerialChar);
-}
+  if (No_Op_Count > 0)
+  {
+    Serial.print("No_Op_Loop Count: ");
+    Serial.println(No_Op_Count, DEC);
+    Serial.print("Stored char: ");
+    Serial.println(Prev_Serial_Byte);
+    Serial.print("Serial char: ");
+    Serial.println(SerialChar);
+  }
+  else
+  {
+    Serial.print("Atari serial char: ");
+    Serial.println(SerialChar);
+  }
 #endif
 
 #ifdef JoystickMouse_Support
   if (SerialChar >= JoyBtnReleaseAll)
   {
-    #ifdef DEBUG
+#ifdef DEBUG
     Serial.print("Storing Prepherial Action: ");
     Serial.println(SerialChar);
-    #endif
+#endif
     ActionByte = SerialChar; // Save the current Serial Char
 
     switch (SerialChar) // Number of Loops required:
     {
     case Joy0:
-      No_Op_Count = 1;    // Joystick Direction, etc, 2 more serial chars:
+      No_Op_Count = 1; // Joystick Direction, etc, 2 more serial chars:
       break;
 
     default:
-      No_Op_Count = 2;    // Directions, fire etc, 1 more serial char:
+      No_Op_Count = 2; // Directions, fire etc, 1 more serial char:
       break;
     }
   }
@@ -776,7 +776,7 @@ else{
         }
       }
       else
-      { // Loop = 2
+      {                                // Loop = 2
         Prev_Serial_Byte = SerialChar; // Stores current Serial Char
         No_Op_Count--;                 // decrease the loop count
       }
@@ -807,7 +807,8 @@ else{
             Keyboard.press(scanCodes[SerialChar]);
 
 #ifdef UseFloppyCapsLock
-            if (SerialChar == ST_CAPS_LOCK){
+            if (SerialChar == ST_CAPS_LOCK)
+            {
               TurnOnOfFloppyLED(!CapsState);
               CapsState = !CapsState;
             }

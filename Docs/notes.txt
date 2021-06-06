@@ -1,0 +1,57 @@
+Notes:
+
+Key Press:
+=========
+Single Char: Between 1 and 114.
+Min:1
+Max: 114
+
+Key Release:
+============
+Single Char: Between 129 and 242.
+Min: 129
+Max: 242
+
+On key down, the (Key Press) character is sent.
+On key up, the (Key Release) character is sent.
+
+Max 2 keys at once.
+
+
+Joy0 / Mouse:
+First, Joy0 (255) identifier is sent, then, direction char.
+Directions can be: 1,2,4,8,5,5,9,10.
+On press of up, clear left and right.
+On press of left, clear up and down.
+On press of down, clear left and right.
+On press of right, clear up and down.
+
+Up (Press)			: 255,1
+
+Down (Press)		: 255,2
+
+Left (Press)		: 255,4
+
+Right (Press)		: 255,8
+
+Up,Left (Press)		: 255,5
+
+Up,Right (Press)	: 255,9
+
+Down,Left (Press)	: 255,6
+
+Down, Right (Press)	: 255,10
+
+(Release)			: 255,0
+
+Fire0 / Mouse Left:
+First, Fire0 press/release is sent, then, 2 following chars.
+
+(Release)			: 248,0,0
+
+Fire0 (Press)		: 249,0,0
+
+Fire1 (Pres)		: 250,0,0
+
+Fire0+1 (Press)		: 251,0,0
+
