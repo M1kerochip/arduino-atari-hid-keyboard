@@ -5,14 +5,23 @@
 * -------------------------------------------------------------------------
 * Initial idea and some original code provided by user 'joska' of 
 * http://www.atari-forum.com - license unknown
+* Based on Arduino code from Kevin Peat 2017  -  kevin@kevinpeat.com
 * -------------------------------------------------------------------------
-* Copyright Kevin Peat 2017
-* kevin@kevinpeat.com
-* My changes and additions are licensed public domain
+* Copyright Michael Farrell 2021
+* mikerochip(at)hotmail.com
+*
 * -------------------------------------------------------------------------
-* Developed for use with an Arduino Leonardo as it is able to act directly 
-* as a USB keyboard controller so doesn't require the Arduino firmware to 
-* be modified as some of the other Arduinos (eg. Uno) would do
+* Arduino USB HID interface for ATmega32U4 based controllers:
+* Leonardo, Micro, Pro Micro, etc.
+* Supports 6 pin RJ11, 7 pin and 18 pin Atari Keyboards from:
+* Atari ST, STF, STM, STFM, STE, Mega ST, Mega STE, TT, Falcon
+* Includes UK and US keyboard layout.
+* Optionally supports:
+* Joystick Player 1. (Must be plugged in before connecting keyboard)
+* Digital Pin 8 can be used to reset the 7 / 18 pin keyboards.
+* Digital Pin 9 can be connected to use the floppy drive led as a capslock led.
+* TODO: Figure out mouse / Joystick Player 2
+* TODO: Add German keyboard layout.
 * -------------------------------------------------------------------------
 */
 
@@ -29,21 +38,29 @@
 #endif
 
 // Define this, to enable Joysticks and Mouse support, with the ST Keyboard
-#define JoystickMouse_Support
+// #define JoystickMouse_Support
 
 #ifdef JoystickMouse_Support
 #include "Joystick.h" // For Joystick control (mheironimus/Joystick)
 #include "Mouse.h"    // For Arduino Mouse
 #endif
 
-// define, to use the US Keyboard layout, rather than the UK keyboard.
-// #define US_Layout
+// define, to use the UK keyboard layout.
+#define UK_ATARI_KEYBOARD
+
+// define, to use the US Keyboard layout.
+// #define US_ATARI_KEYBOARD
+
+/* Not started yet! Doesn't work.
+// define, to use the German keyboard layout.
+// #define DE_ATARI_KEYBOARD
+*/
 
 /*
 For 7 pin Atari keyboards, you can use the floppy LED as a caps lock LED
 Unsupported on RJ11 external Keyboards: Mega ST, Mega STE, TT
 */
-#define UseFloppyCapsLock // Define, to use the floppy LED as capslock LED
+// #define UseFloppyCapsLock // Define, to use the floppy LED as capslock LED
 
 #ifdef UseFloppyCapsLock
 // ST keyboard Floppy LED pin
@@ -151,7 +168,7 @@ const uint8_t Key_BackSlashPipe_NonUS = 0x64 + KeyboardStupid;
   https://www.usb.org/sites/default/files/documents/hut1_12v2.pdf
 */
 
-#ifdef US_Layout
+#ifdef US_ATARI_KEYBOARD
 // US ST Layout, for US USB HID Keyboard
 uint8_t scanCodes[] =
     {
@@ -271,7 +288,9 @@ uint8_t scanCodes[] =
         NUM_Period,           // Numeric Pad .
         NUM_Enter             // Numeric Pad Enter
 };
-#else
+#endif
+
+#ifdef UK_ATARI_KEYBOARD
 // UK ST Layout, for UK British USB HID Keyboard
 uint8_t scanCodes[] =
     {
@@ -393,8 +412,131 @@ uint8_t scanCodes[] =
 };
 #endif
 
+#ifdef DE_ATARI_KEYBOARD
+// UK ST Layout, for UK British USB HID Keyboard
+uint8_t scanCodes[] =
+    {
+        0x00,                    // (Nothing)
+        KEY_ESC,                 // Esc
+        0x31,                    // 1
+        0x32,                    // 2
+        0x33,                    // 3
+        0x34,                    // 4
+        0x35,                    // 5
+        0x36,                    // 6
+        0x37,                    // 7
+        0x38,                    // 8
+        0x39,                    // 9
+        0x30,                    // 0
+        0x2D,                    // -
+        0x3D,                    // == (Mapped to =)
+        KEY_BACKSPACE,           // Backspace
+        KEY_TAB,                 // Tab
+        0x71,                    // q
+        0x77,                    // w
+        0x65,                    // e
+        0x72,                    // r
+        0x74,                    // t
+        0x79,                    // y
+        0x75,                    // u
+        0x69,                    // i
+        0x6F,                    // o
+        0x70,                    // p
+        0x5B,                    // [
+        0x5D,                    // ]
+        KEY_RETURN,              // Enter
+        KEY_LEFT_CTRL,           // Control
+        0x61,                    // a
+        0x73,                    // s
+        0x64,                    // d
+        0x66,                    // f
+        0x67,                    // g
+        0x68,                    // h
+        0x6A,                    // j
+        0x6B,                    // k
+        0x6C,                    // l
+        0x3B,                    // ;
+        0x27,                    // ' (Mapped to '")
+        Key_GraveAccentTilde,    // #
+        KEY_LEFT_SHIFT,          // Lshift
+        Key_TildeHash_NonUS,     // #~
+        0x7A,                    // z
+        0x78,                    // x
+        0x63,                    // c
+        0x76,                    // v
+        0x62,                    // b
+        0x6E,                    // n
+        0x6D,                    // m
+        0x2C,                    // ,
+        0x2E,                    // .
+        0x2F,                    // /
+        KEY_RIGHT_SHIFT,         // Rshift
+        0x37,                    // (Not used)
+        KEY_LEFT_ALT,            // Alternate
+        0x20,                    // Space
+        KEY_CAPS_LOCK,           // CapsLock
+        KEY_F1,                  // F1
+        KEY_F2,                  // F2
+        KEY_F3,                  // F3
+        KEY_F4,                  // F4
+        KEY_F5,                  // F5
+        KEY_F6,                  // F6
+        KEY_F7,                  // F7
+        KEY_F8,                  // F8
+        KEY_F9,                  // F9
+        KEY_F10,                 // F10
+        0x45,                    // (Not used)
+        0x46,                    // (Not used)
+        KEY_HOME,                // Clr/Home
+        KEY_UP_ARROW,            // Up Arrow
+        0x49,                    // (Not used)
+        NUM_Minus,               // Numeric Pad -
+        KEY_LEFT_ARROW,          // Left Arrow
+        0x4c,                    // (Not used)
+        KEY_RIGHT_ARROW,         // Right Arrow
+        NUM_Plus,                // Numeric Pad +
+        0x4f,                    // (Not used)
+        KEY_DOWN_ARROW,          // Down Arrow
+        0x51,                    // (Not used)
+        KEY_INSERT,              // Insert
+        KEY_DELETE,              // Delete
+        0x54,                    // (Not used)
+        0x55,                    // (Not used)
+        0x56,                    // (Not used)
+        0x57,                    // (Not used)
+        0x58,                    // (Not used)
+        0x59,                    // (Not used)
+        0x5a,                    // (Not used)
+        0x5b,                    // (Not used)
+        0x5c,                    // (Not used)
+        0x5d,                    // (Not used)
+        0x5e,                    // (Not used)
+        0x5f,                    // (Not used)
+        Key_BackSlashPipe_NonUS, // Keyboard Non-US \ and |
+        KEY_F12,                 // Undo (Mapped to F12)
+        KEY_F11,                 // Help (Mapped to F11)
+        0x28,                    // Numeric Pad ( [Mapped to ( since the Arduino keyboard can't map keycode 182]
+        0x29,                    // Numeric Pad ) [Mapped to ) since the Arduino keyboard can't map keycode 183]
+        NUM_Slash,               // Numeric Pad /
+        NUM_Star,                // Numeric Pad *
+        NUM_7,                   // Numeric Pad 7
+        NUM_8,                   // Numeric Pad 8
+        NUM_9,                   // Numeric Pad 9
+        NUM_4,                   // Numeric Pad 4
+        NUM_5,                   // Numeric Pad 5
+        NUM_6,                   // Numeric Pad 6
+        NUM_1,                   // Numeric Pad 1
+        NUM_2,                   // Numeric Pad 2
+        NUM_3,                   // Numeric Pad 3
+        NUM_0,                   // Numeric Pad 0
+        NUM_Period,              // Numeric Pad .
+        NUM_Enter                // Numeric Pad Enter
+};
+#endif
+
+
 #ifdef UseFloppyCapsLock
-boolean CapsState = false;
+boolean CapsState = true;
 /*
 Switch on/off the floppy drive led via the ST_FLOPPY_LED Pin.
 */
@@ -457,6 +599,7 @@ void setup(void)
     Joystick[index].setXAxis(0);
     Joystick[index].setYAxis(0);
   }
+  Mouse.begin; // Starts the mouse.
 #endif
 }
 
@@ -585,13 +728,8 @@ else{
     {
       if (No_Op_Count == 1)
       {
-        No_Op_Count--;
-        // Handle Loop
-    #ifdef DEBUG
-    Serial.print("Action: ");
-    Serial.println(ActionByte);
-    #endif
-        switch (ActionByte)
+        No_Op_Count--;      // Decrease the loop counter
+        switch (ActionByte) // Handle Loop
         {
         case Joy0:
 #ifdef DEBUG
