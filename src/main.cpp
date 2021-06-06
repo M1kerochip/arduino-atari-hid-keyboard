@@ -26,7 +26,7 @@
 */
 
 // Define to include console output.
-// #define DEBUG
+#define DEBUG
 
 // Define this, to use the normal Arduino Keyboard library.
 #define ArduinoKeyboard_Source
@@ -51,10 +51,8 @@
 // define, to use the US Keyboard layout.
 // #define US_ATARI_KEYBOARD
 
-/* Not started yet! Doesn't work.
 // define, to use the German keyboard layout.
 // #define DE_ATARI_KEYBOARD
-*/
 
 /*
 For 7 pin Atari keyboards, you can use the floppy LED as a caps lock LED
@@ -413,7 +411,7 @@ uint8_t scanCodes[] =
 #endif
 
 #ifdef DE_ATARI_KEYBOARD
-// UK ST Layout, for UK British USB HID Keyboard
+// German ST Layout, for DE USB HID Keyboard
 uint8_t scanCodes[] =
     {
         0x00,                    // (Nothing)
@@ -427,9 +425,9 @@ uint8_t scanCodes[] =
         0x37,                    // 7
         0x38,                    // 8
         0x39,                    // 9
-        0x30,                    // 0
-        0x2D,                    // -
-        0x3D,                    // == (Mapped to =)
+        0x30,                    // 0=
+        0x2D,                    // ß?
+        0x3D,                    // ´´
         KEY_BACKSPACE,           // Backspace
         KEY_TAB,                 // Tab
         0x71,                    // q
@@ -437,13 +435,13 @@ uint8_t scanCodes[] =
         0x65,                    // e
         0x72,                    // r
         0x74,                    // t
-        0x79,                    // y
+        0x79,                    // y or z
         0x75,                    // u
         0x69,                    // i
         0x6F,                    // o
         0x70,                    // p
-        0x5B,                    // [
-        0x5D,                    // ]
+        0x3B,                    // Ö
+        0x27,                    // Ä
         KEY_RETURN,              // Enter
         KEY_LEFT_CTRL,           // Control
         0x61,                    // a
@@ -455,11 +453,11 @@ uint8_t scanCodes[] =
         0x6A,                    // j
         0x6B,                    // k
         0x6C,                    // l
-        0x3B,                    // ;
-        0x27,                    // ' (Mapped to '")
-        Key_GraveAccentTilde,    // #
+        0x2C,                    // ,;
+        0x5B,                    // ü
+        Key_GraveAccentTilde,    // ^^
         KEY_LEFT_SHIFT,          // Lshift
-        Key_TildeHash_NonUS,     // #~
+        Key_BackSlashPipe,       // <-- Incorrect TODO: Fix!
         0x7A,                    // z
         0x78,                    // x
         0x63,                    // c
@@ -467,9 +465,9 @@ uint8_t scanCodes[] =
         0x62,                    // b
         0x6E,                    // n
         0x6D,                    // m
-        0x2C,                    // ,
-        0x2E,                    // .
-        0x2F,                    // /
+        Key_BackSlashPipe_NonUS, // <>
+        0x2E,                    // .:
+        0x2F,                    // -_
         KEY_RIGHT_SHIFT,         // Rshift
         0x37,                    // (Not used)
         KEY_LEFT_ALT,            // Alternate
@@ -512,7 +510,8 @@ uint8_t scanCodes[] =
         0x5d,                    // (Not used)
         0x5e,                    // (Not used)
         0x5f,                    // (Not used)
-        Key_BackSlashPipe_NonUS, // Keyboard Non-US \ and |
+//        Key_BackSlashPipe_NonUS, // Keyboard Non-US \ and |
+        0x5D,                    // 
         KEY_F12,                 // Undo (Mapped to F12)
         KEY_F11,                 // Help (Mapped to F11)
         0x28,                    // Numeric Pad ( [Mapped to ( since the Arduino keyboard can't map keycode 182]
